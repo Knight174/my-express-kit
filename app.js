@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const app = new express();
 const fn1 = require("./fn1"); // 外部中间件
+const testRouter = require("./routes/api/v1/test.js");
 
 // 定义 app 变量，通过任意中间件的 res.app.locals.title 来获取
 app.locals.title = "this is a title";
@@ -18,6 +19,8 @@ app.use((req, res, next) => {
 });
 // 外部中间件
 app.use(fn1);
+// 导入路由中间件
+app.use("/api/v1/test", testRouter);
 
 // 路由
 app.get("/", (request, response) => {
@@ -25,36 +28,6 @@ app.get("/", (request, response) => {
 });
 app.get("/yo", (request, response) => {
   response.send("YO!");
-});
-
-// GET 请求
-// app.get("/api/v1/test", (request, response) => {
-//   console.log("get /test");
-//   response.end();
-// });
-// 上面的 GET 请求等价于下面这个中间件：
-app.use((request, response, next) => {
-  if (request.method === "GET" && request.path === "/api/v1/test") {
-    console.log("get /test");
-    response.send("get /test");
-  }
-  next();
-});
-
-// POST 请求
-app.post("/api/v1/test", (request, response) => {
-  console.log("post /test");
-  response.send("post /test");
-});
-// PUT 请求
-app.put("/api/v1/test/1", (request, response) => {
-  console.log("put /test/1");
-  response.send("put /test/1");
-});
-// DELETE 请求
-app.delete("/api/v1/test/1", (request, response) => {
-  console.log("delete /test/1");
-  response.send("delete /test/1");
 });
 
 /*
