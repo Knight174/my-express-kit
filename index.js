@@ -56,11 +56,36 @@ app.delete("/api/v1/test/1", (request, response) => {
   response.send("delete /test/1");
 });
 
-// get /api/v1/users/:id
-app.get("/api/v1/users/:id", (request, response) => {
+/*
+ * req.params 🌰
+ * /api/v1/users/:id
+ *   e.g. /api/v1/users/1 => {id: 1}
+ * /api/v1/users/:id/:action
+ *   e.g. /api/v1/users/1/edit => {id: 1, action: 'edit'}
+ */
+app.get("/api/v1/users/:id/:action", (request, response) => {
+  // 只包含 :id, :action
   console.log("request.params => ", request.params);
-  console.log("get /users/:id");
-  response.send("get /users/:id");
+  console.log("get /api/v1/users/:id/:action");
+  // response.send("get /api/v1/users/:id/:action");
+  response.json({
+    data: request.params,
+  });
+});
+
+/*
+ * req.query 🌰
+ * /api/v1/works/search => {}
+ * /api/v1/works/search?name=xxx => {name: 'xxx'}
+ * /api/v1/works/search?name=xxx&age=18 => {name: 'xxx', age: 18}
+ */
+app.get("/api/v1/works/search", (request, response) => {
+  console.log("request.query => ", request.query);
+  console.log("get /api/v1/works/search");
+  // response.send("get /api/v1/works/search");
+  response.json({
+    data: request.query,
+  });
 });
 
 const server = app.listen(3000, () => {
