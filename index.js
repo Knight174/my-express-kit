@@ -10,7 +10,7 @@ app.use(express.urlencoded({ extended: false })); // 解析 url 编码数据（�
 app.use(express.static("./public")); // 指定静态目录，先去这里找，找不到就 next()
 
 // 中间件
-// 本地中间件
+// 本地中间件：打印 request 请求体数据
 app.use((req, res, next) => {
   console.log("req", req.body);
   next();
@@ -32,29 +32,37 @@ app.get("/yo", (request, response) => {
 //   response.end();
 // });
 // 上面的 GET 请求等价于下面这个中间件：
-app.use((req, res, next) => {
-  if (req.method === "GET" && req.path === "/api/v1/test") {
+app.use((request, response, next) => {
+  if (request.method === "GET" && request.path === "/api/v1/test") {
     console.log("get /test");
-    res.end();
-    next();
+    response.send("get /test");
   }
+  next();
 });
 
 // POST 请求
 app.post("/api/v1/test", (request, response) => {
   console.log("post /test");
-  response.end();
+  response.send("post /test");
 });
 // PUT 请求
 app.put("/api/v1/test/1", (request, response) => {
   console.log("put /test/1");
-  response.end();
+  response.send("put /test/1");
 });
 // DELETE 请求
 app.delete("/api/v1/test/1", (request, response) => {
   console.log("delete /test/1");
-  response.end();
+  response.send("delete /test/1");
 });
+
+// get /api/v1/users/:id
+app.get("/api/v1/users/:id", (request, response) => {
+  console.log("request.params => ", request.params);
+  console.log("get /users/:id");
+  response.send("get /users/:id");
+});
+
 const server = app.listen(3000, () => {
   console.log("Server running at http://localhost:" + server.address().port);
 });
