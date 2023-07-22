@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const app = new express();
 const fn1 = require("./fn1"); // 外部中间件
 
@@ -100,6 +101,31 @@ app.get("/api/v1/workflows", (request, response) => {
   response.json({
     data: response.get("X-Eric"), // 获取请求头，如果是多个则返回一个数组
   });
+});
+
+// 文件下载 /api/v1/download?name=example
+app.get("/api/v1/download", (request, response) => {
+  if (request.query.name === "example") {
+    const imagePath = path.join(__dirname, "public/images", "example.jpg");
+    response.download(imagePath, "example.jpg", (err) => {
+      if (err) {
+        // 发生错误时执行的操作
+        console.log(err);
+        res.status(500).send("Internal Server Error");
+      } else {
+        // 下载完成时执行的操作
+        console.log("File downloaded successfully.");
+      }
+    });
+  }
+});
+
+// 设置重定向：重定向到 /blog
+app.get("/posts", (request, response) => {
+  response.status(301).location("/blog").end();
+});
+app.get("/blog", (request, response) => {
+  response.send("hello, blog");
 });
 
 const server = app.listen(3000, () => {
