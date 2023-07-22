@@ -3,6 +3,7 @@ const path = require("path");
 const app = new express();
 const fn1 = require("./fn1"); // 外部中间件
 const testRouter = require("./routes/api/v1/test.js");
+const uploadRouter = require("./routes/api/v1/upload.js");
 
 // 定义 app 变量，通过任意中间件的 res.app.locals.title 来获取
 app.locals.title = "this is a title";
@@ -21,6 +22,7 @@ app.use((req, res, next) => {
 app.use(fn1);
 // 导入路由中间件
 app.use("/api/v1/test", testRouter);
+app.use("/api/v1/upload", uploadRouter);
 
 // 路由
 app.get("/", (request, response) => {
