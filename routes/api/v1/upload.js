@@ -18,7 +18,7 @@ const storage = multer.diskStorage({
 // 创建 multer 实例
 const upload = multer({ storage: storage });
 
-// POST 请求
+// 文件上传
 router.post("/", upload.single("file"), (request, response) => {
   if (!request.file) {
     return response.status(400).json({ message: "No file uploaded" });
