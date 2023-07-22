@@ -1,13 +1,16 @@
 const express = require("express");
 const path = require("path");
+const bodyParser = require("body-parser");
 const app = new express();
 const fn1 = require("./fn1"); // 外部中间件
 const testRouter = require("./routes/api/v1/test.js");
-const uploadRouter = require("./routes/api/v1/upload.js"); // 
+const uploadRouter = require("./routes/api/v1/upload.js");
 
 // 定义 app 变量，通过任意中间件的 res.app.locals.title 来获取
 app.locals.title = "this is a title";
 
+app.use(bodyParser.json({ limit: "150kb" }));
+app.use(bodyParser.urlencoded({ limit: "150kb", extended: true }));
 app.use(express.json()); // 解析请求体中的 json 数据变成对象
 app.use(express.urlencoded({ extended: false })); // 解析 url 编码数据（表单数据）
 app.use(express.static("./public")); // 指定静态目录，先去这里找，找不到就 next()
