@@ -18,11 +18,21 @@ app.get("/", (request, response) => {
 app.get("/yo", (request, response) => {
   response.send("YO!");
 });
+
 // GET 请求
-app.get("/api/v1/test", (request, response) => {
-  console.log("get /test");
-  response.end();
+// app.get("/api/v1/test", (request, response) => {
+//   console.log("get /test");
+//   response.end();
+// });
+// 上面的 GET 请求等价于下面这个中间件：
+app.use((req, res, next) => {
+  if (req.method === "GET" && req.path === "/api/v1/test") {
+    console.log("get /test");
+    res.end();
+    next();
+  }
 });
+
 // POST 请求
 app.post("/api/v1/test", (request, response) => {
   console.log("post /test");
