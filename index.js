@@ -122,7 +122,9 @@ app.get("/api/v1/download", (request, response) => {
 
 // 设置重定向：重定向到 /blog
 app.get("/posts", (request, response) => {
-  response.status(301).location("/blog").end();
+  // response.status(301).location("/blog").end();
+  // 等价于：
+  response.redirect("/blog").end();
 });
 app.get("/blog", (request, response) => {
   response.send("hello, blog");
