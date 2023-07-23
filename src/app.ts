@@ -11,6 +11,7 @@ import logLocals from './middleware/log-locals';
 import indexRouter from './routes/index';
 import testRouter from './routes/api/v1/test';
 import usersRouter from './routes/api/v1/users';
+import workflowsRouter from './routes/api/v1/workflows';
 import uploadRouter from './routes/api/v1/upload';
 
 // 创建主应用实例
@@ -40,20 +41,7 @@ app.use('/', indexRouter);
 app.use('/api/v1/test', testRouter);
 app.use('/api/v1/upload', uploadRouter);
 app.use('/api/v1/users', usersRouter);
-
-// 响应头（设置响应头参数、设置状态码）
-app.get('/api/v1/workflows', (request, response) => {
-  response.set('X-Eric', 'node'); // 设置响应头
-  response.append('X-Eric', 'node2'); // 追加响应头
-
-  // response.append("X-Eric2", "node2"); // 追加新的响应头
-
-  response.status(401); // 设置状态码
-
-  response.json({
-    data: response.get('X-Eric'), // 获取请求头，如果是多个则返回一个数组
-  });
-});
+app.use('/api/v1/workflows', workflowsRouter);
 
 const server = app.listen(3000, () => {
   const address = server.address();
