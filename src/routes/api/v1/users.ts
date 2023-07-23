@@ -7,10 +7,15 @@ const router = Router();
  *   e.g. /api/v1/users/1 => {id: 1}
  * /api/v1/users/:id/:action
  *   e.g. /api/v1/users/1/edit => {id: 1, action: 'edit'}
+ *  /api/v1/users/:id/:action?key1=value1&key2=value2
+ *   e.g. /api/v1/users/1/edit
+ *                             => params: {id: 1, action: 'edit'}
+ *                             => query: {key1: 'value1', key2: 'value2'}
  */
 router.get('/:id/:action', (request, response) => {
   // 只包含 :id, :action
   console.log('request.params => ', request.params);
+  console.log('request.query => ', request.query);
   response.json({
     data: request.params,
   });
