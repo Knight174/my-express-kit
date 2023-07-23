@@ -3,7 +3,9 @@ import path from 'path';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import consoleLogger from 'morgan';
-import requestLogger from './middleware/logger';
+import requestLogger from './middleware/request-logger';
+// import errorLogger from './middleware/other-logger';
+// errorLogger.error('abcdefg'); // 触发一个错误日志记录
 
 import fn1 from './fn1'; // 外部中间件
 import testRouter from './routes/api/v1/test';

@@ -13,6 +13,4 @@ const accessLogStream = fs.createWriteStream(path.join(logsDir, 'access.log'), {
   flags: 'a',
 });
 
-console.log('accessLogStream => ', accessLogStream);
-
 export default morgan('combined', { stream: accessLogStream });
