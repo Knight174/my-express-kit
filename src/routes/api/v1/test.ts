@@ -1,4 +1,5 @@
-const router = require('express').Router();
+import Router from 'express';
+const router = Router();
 
 // GET 请求
 router.get('/', (request, response, next) => {
@@ -27,4 +28,4 @@ router.delete('/1', (request, response) => {
   response.send('delete /test/1');
 });
 
-module.exports = router;
+export default router;

@@ -1,7 +1,9 @@
-const router = require('express').Router();
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+import Router from 'express';
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+
+const router = Router();
 
 // 设置存储引擎和文件存储路径
 const storage = multer.diskStorage({
@@ -61,4 +63,4 @@ router.post('/base64', (req, res) => {
   });
 });
 
-module.exports = router;
+export default router;

@@ -1,14 +1,15 @@
-const express = require('express');
-const path = require('path');
-const bodyParser = require('body-parser');
-const app = new express();
-const fn1 = require('./fn1'); // 外部中间件
-const testRouter = require('./routes/api/v1/test.js');
-const uploadRouter = require('./routes/api/v1/upload.js');
+import express, { Application, Request, Response, NextFunction } from 'express';
+import path from 'path';
+import bodyParser from 'body-parser';
+import fn1 from './fn1'; // 外部中间件
+import testRouter from './routes/api/v1/test';
+import uploadRouter from './routes/api/v1/upload';
 
+const app: Application = express();
 // 定义 app 变量，通过任意中间件的 res.app.locals.title 来获取
 app.locals.title = 'this is a title';
 
+// 数据实体大小限制
 app.use(bodyParser.json({ limit: '150kb' }));
 app.use(bodyParser.urlencoded({ limit: '150kb', extended: true }));
 app.use(express.json()); // 解析请求体中的 json 数据变成对象
@@ -89,7 +90,7 @@ app.get('/api/v1/download', (request, response) => {
       if (err) {
         // 发生错误时执行的操作
         console.log(err);
-        res.status(500).send('Internal Server Error');
+        response.status(500).send('Internal Server Error');
       } else {
         // 下载完成时执行的操作
         console.log('File downloaded successfully.');
@@ -116,12 +117,16 @@ app.get('/example.pdf', (request, response) => {
 app.get('/posts', (request, response) => {
   // response.status(301).location("/blog").end();
   // 等价于：
-  response.redirect('/blog').end();
+  response.redirect('/blog');
+  response.end();
 });
 app.get('/blog', (request, response) => {
   response.send('hello, blog');
 });
 
 const server = app.listen(3000, () => {
-  console.log('Server running at http://localhost:' + server.address().port);
+  const address = server.address();
+  const port =
+    typeof address === 'string' ? parseInt(address, 10) : address?.port;
+  console.log('Server running at http://localhost:' + port);
 });
