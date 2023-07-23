@@ -5,7 +5,9 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev:start": "nodemon ./dist/app.js",
+    "dev:bundle": "tsc -w",
+    "dev": "tsc && concurrently npm:dev:*"
   },
   "keywords": [
     "express"
@@ -28,8 +30,9 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.17",
-    "@types/node": "^20.4.4",
     "@types/multer": "^1.4.7",
+    "@types/node": "^20.4.4",
+    "concurrently": "^8.2.0",
     "nodemon": "^2.0.15"
   }
 }
