@@ -55,23 +55,6 @@ app.get('/api/v1/workflows', (request, response) => {
   });
 });
 
-// 文件下载 /api/v1/download?name=example
-app.get('/api/v1/download', (request, response) => {
-  if (request.query.name === 'example') {
-    const imagePath = path.join(__dirname, 'public/images', 'example.jpg');
-    response.download(imagePath, 'example.jpg', (err) => {
-      if (err) {
-        // 发生错误时执行的操作
-        console.log(err);
-        response.status(500).send('Internal Server Error');
-      } else {
-        // 下载完成时执行的操作
-        console.log('File downloaded successfully.');
-      }
-    });
-  }
-});
-
 const server = app.listen(3000, () => {
   const address = server.address();
   const port =

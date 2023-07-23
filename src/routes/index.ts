@@ -20,6 +20,23 @@ router.get('/posts', (request, response) => {
   response.end();
 });
 
+// 文件下载 /download?name=example
+router.get('/download', (request, response) => {
+  if (request.query.name === 'example') {
+    const imagePath = path.join(__dirname, 'public/images', 'example.jpg');
+    response.download(imagePath, 'example.jpg', (err) => {
+      if (err) {
+        // 发生错误时执行的操作
+        console.log(err);
+        response.status(500).send('Internal Server Error');
+      } else {
+        // 下载完成时执行的操作
+        console.log('File downloaded successfully.');
+      }
+    });
+  }
+});
+
 // 文件发送（不会下载，会尝试帮你打开）：/example.pdf
 /*
  * 文本文件：文本文件可以在浏览器中直接打开和查看，例如 .txt、.html、.css、.js 等文件。
