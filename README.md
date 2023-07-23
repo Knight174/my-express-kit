@@ -1,6 +1,12 @@
 # my-express-kit
 
-my express kit can remind me how to use express
+The kit can remind me how to create an express application.
+
+- express.js
+- typescript
+- postgresql
+- redis
+- docker
 
 ## express api
 
@@ -12,8 +18,10 @@ my express kit can remind me how to use express
 
 ## middleware
 
+- bodyParser: limit body size
 - cors: handle cors
-- morgan: handle logs
+- morgan: handle request logs
+- winston: handle error or the other logs
 
 ## install
 

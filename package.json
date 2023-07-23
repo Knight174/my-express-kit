@@ -10,7 +10,11 @@
     "dev": "tsc && concurrently npm:dev:*"
   },
   "keywords": [
-    "express"
+    "express.js",
+    "typescript",
+    "postgresql",
+    "redis",
+    "docker"
   ],
   "homepage": "https://github.com/Knight174/my-express-kit.git",
   "license": "MIT",
