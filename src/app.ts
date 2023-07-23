@@ -1,6 +1,7 @@
 import express, { Application, Request, Response, NextFunction } from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
+import cors from 'cors';
 import fn1 from './fn1'; // 外部中间件
 import testRouter from './routes/api/v1/test';
 import uploadRouter from './routes/api/v1/upload';
@@ -15,6 +16,7 @@ app.use(bodyParser.urlencoded({ limit: '150kb', extended: true }));
 app.use(express.json()); // 解析请求体中的 json 数据变成对象
 app.use(express.urlencoded({ extended: false })); // 解析 url 编码数据（表单数据）
 app.use(express.static('./public')); // 指定静态目录，先去这里找，找不到就 next()
+app.use(cors()); // 处理 cors 跨域
 
 // 中间件
 // 本地中间件：打印 request 请求体数据
