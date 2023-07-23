@@ -2,7 +2,8 @@ import express, { Application, Request, Response, NextFunction } from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import morgan from 'morgan';
+import consoleLogger from 'morgan';
+import requestLogger from './middleware/logger';
 
 import fn1 from './fn1'; // 外部中间件
 import testRouter from './routes/api/v1/test';
@@ -19,7 +20,7 @@ app.use(express.json()); // 解析请求体中的 json 数据变成对象
 app.use(express.urlencoded({ extended: false })); // 解析 url 编码数据（表单数据）
 app.use(express.static('./public')); // 指定静态目录，先去这里找，找不到就 next()
 app.use(cors()); // 处理 cors 跨域
-app.use(morgan('short')); // 添加 logger 中间件
+app.use(consoleLogger('dev')); // 控制台日志中间件
 
 // 中间件
 // 本地中间件：打印 request 请求体数据
@@ -32,6 +33,9 @@ app.use(fn1);
 // 导入路由中间件
 app.use('/api/v1/test', testRouter);
 app.use('/api/v1/upload', uploadRouter);
+
+app.use(requestLogger); // 请求日志中间件
+console.info('requestLogger', requestLogger);
 
 // 路由
 app.get('/', (request, response) => {
