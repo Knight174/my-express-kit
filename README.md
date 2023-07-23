@@ -14,8 +14,8 @@ The kit can remind me how to create an express application.
 - [ ] sign in / sign out
 - [x] file upload (single file)
 - [x] file upload (base64)
-- [] file upload (multi files)
-- [] file upload (multipart)
+- [ ] file upload (multi files)
+- [ ] file upload (multipart)
 - [x] file download
 - [x] file sending
 - [ ] real-time logs
