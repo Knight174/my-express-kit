@@ -6,11 +6,11 @@ import consoleLogger from 'morgan';
 import requestLogger from './middleware/request-logger';
 // import errorLogger from './middleware/other-logger';
 // errorLogger.error('abcdefg'); // 触发一个错误日志记录
-
-// 自封装中间件
 import logLocals from './middleware/log-locals';
+
 import indexRouter from './routes/index';
 import testRouter from './routes/api/v1/test';
+import usersRouter from './routes/api/v1/users';
 import uploadRouter from './routes/api/v1/upload';
 
 // 创建主应用实例
@@ -39,38 +39,7 @@ app.use(logLocals);
 app.use('/', indexRouter);
 app.use('/api/v1/test', testRouter);
 app.use('/api/v1/upload', uploadRouter);
-
-/*
- * req.params 🌰
- * /api/v1/users/:id
- *   e.g. /api/v1/users/1 => {id: 1}
- * /api/v1/users/:id/:action
- *   e.g. /api/v1/users/1/edit => {id: 1, action: 'edit'}
- */
-app.get('/api/v1/users/:id/:action', (request, response) => {
-  // 只包含 :id, :action
-  console.log('request.params => ', request.params);
-  console.log('get /api/v1/users/:id/:action');
-  // response.send("get /api/v1/users/:id/:action");
-  response.json({
-    data: request.params,
-  });
-});
-
-/*
- * req.query 🌰
- * /api/v1/works/search => {}
- * /api/v1/works/search?name=xxx => {name: 'xxx'}
- * /api/v1/works/search?name=xxx&age=18 => {name: 'xxx', age: 18}
- */
-app.get('/api/v1/works/search', (request, response) => {
-  console.log('request.query => ', request.query);
-  console.log('get /api/v1/works/search');
-  // response.send("get /api/v1/works/search");
-  response.json({
-    data: request.query,
-  });
-});
+app.use('/api/v1/users', usersRouter);
 
 // 响应头（设置响应头参数、设置状态码）
 app.get('/api/v1/workflows', (request, response) => {
