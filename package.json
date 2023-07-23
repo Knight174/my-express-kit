@@ -1,15 +1,26 @@
 {
-  "name": "express-demo-1",
+  "name": "my-express-kit",
   "version": "1.0.0",
-  "description": "",
+  "description": "my express kit can remind me how to use express",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "express"
+  ],
+  "homepage": "https://github.com/Knight174/my-express-kit.git",
+  "license": "MIT",
+  "author": {
+    "name": "Knight174",
+    "email": "eric@ericchenart.com",
+    "url": "https://ericchenart.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Knight174/my-express-kit.git"
+  },
   "dependencies": {
     "body-parser": "^1.20.2",
     "express": "^4.17.3",
