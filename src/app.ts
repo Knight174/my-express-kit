@@ -1,5 +1,4 @@
-import express, { Application, Request, Response, NextFunction } from 'express';
-import path from 'path';
+import express, { Application } from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import consoleLogger from 'morgan';
