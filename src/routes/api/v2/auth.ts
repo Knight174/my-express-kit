@@ -10,13 +10,37 @@ const router = Router();
 
 // 注册
 router.post('/register', async (req, res) => {
-  const { username, password, email } = req.body;
+  const { username, password, email, code } = req.body;
   const ip = req.ip || '';
 
   if (!username || !password || !email) {
     return res.status(400).json({
       success: false,
       message: 'username or password or email is error',
+    });
+  }
+
+  if (!code) {
+    return res.status(400).json({
+      success: false,
+      message: 'no verification code',
+    });
+  }
+
+  // 检查用户发送的 code 和数据库中 email 对应的 code 是否一致
+  try {
+    const codeInDB = await prisma.verificationCode.findFirst({
+      where: {
+        email,
+      },
+    });
+    if (!codeInDB) {
+      return res.status(400).json({ success: false, message: '验证码错误！' });
+    }
+  } catch (e) {
+    return res.status(500).json({
+      success: false,
+      message: '服务器错误',
     });
   }
 
@@ -51,6 +75,13 @@ router.post('/register', async (req, res) => {
       username: true,
       email: true,
       ip: true,
+    },
+  });
+
+  // 如果注册成功，删除验证码数据库中的对应字段
+  await prisma.verificationCode.delete({
+    where: {
+      email,
     },
   });
 
