@@ -6,12 +6,15 @@ import requestLogger from './middleware/request-logger';
 // import errorLogger from './middleware/other-logger';
 // errorLogger.error('abcdefg'); // 触发一个错误日志记录
 import logLocals from './middleware/log-locals';
+import jwt from './middleware/jwt-auth';
 
 import indexRouter from './routes/index';
 import testRouter from './routes/api/v1/test';
 import usersRouter from './routes/api/v1/users';
 import workflowsRouter from './routes/api/v1/workflows';
 import uploadRouter from './routes/api/v1/upload';
+
+import authRouter from './routes/api/v2/auth';
 
 // 创建主应用实例
 const app: Application = express();
@@ -26,6 +29,7 @@ app.use(express.static('./public')); // 指定静态目录，先去这里找，�
 app.use(cors()); // 处理 cors 跨域
 app.use(consoleLogger('dev')); // 控制台中打印请求日志
 app.use(requestLogger); // 请求日志记录到日志文件
+app.use(jwt);
 
 // 本地中间件：任意请求，打印 request 请求体数据
 app.use((req, res, next) => {
@@ -41,6 +45,8 @@ app.use('/api/v1/test', testRouter);
 app.use('/api/v1/upload', uploadRouter);
 app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/workflows', workflowsRouter);
+
+app.use('/api/v2/auth', authRouter);
 
 const server = app.listen(3000, () => {
   const address = server.address();
