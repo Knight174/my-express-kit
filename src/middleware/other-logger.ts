@@ -27,6 +27,12 @@ const logger = createLogger({
       // 定义日志输出的最小级别
       level: 'error',
     }),
+    new transports.File({
+      // 定义日志文件的路径和文件名
+      filename: path.join(__dirname, '../logs/warn.log'),
+      // 定义日志输出的最小级别
+      level: 'warn',
+    }),
   ],
 });
 
