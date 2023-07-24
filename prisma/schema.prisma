@@ -14,7 +14,7 @@ datasource db {
 // 1 user -> n posts
 // 1 user -> n comments
 model User {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @unique @default(uuid())
   ip        String
   username  String   @unique
   nickname  String?
@@ -42,7 +42,16 @@ model Post {
   // 在查询动作中，通过 includes 关联查询可以查到对应 user 的数据
   // 在数据库中，author 并不会作为字段出现在 Post 表，只有 authorId 存在
   author     User     @relation(fields: [authorId], references: [id])
-  authorId   Int      @map("author_id")
+  authorId   String   @map("author_id")
 
   @@map("posts")
+}
+
+model VerificationCode {
+  id        Int      @id @default(autoincrement())
+  code      String
+  email     String   @unique
+  createdAt DateTime @default(now())
+
+  @@map("verification_code")
 }

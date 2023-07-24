@@ -11,7 +11,8 @@ The kit can remind me how to create an express application.
 
 ## roadmap
 
-- [ ] sign in / sign out
+- [ ] register (email)
+- [x] login
 - [x] file upload (single file)
 - [x] file upload (base64)
 - [ ] file upload (multi files)
@@ -34,6 +35,7 @@ The kit can remind me how to create an express application.
 - cors: handle cors
 - morgan: handle request logs
 - winston: handle error or the other logs
+- express-jwt: validating JWTs
 
 ## install
 

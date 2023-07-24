@@ -3,10 +3,12 @@ import jwt from 'jsonwebtoken';
 import prisma from '../../../db/prisma';
 import { PasswordUtil } from '../../../utils/password-util';
 import { JWT_SECRET } from '../../../jwt/constant';
+import sendVerificationEmail from '../../../utils/send_email-util';
+import generateCode from '../../../utils/verification_code-util';
 
 const router = Router();
 
-// POST 请求
+// 注册
 router.post('/register', async (req, res) => {
   const { username, password, email } = req.body;
   const ip = req.ip || '';
@@ -95,6 +97,53 @@ router.post('/login', async (req, res) => {
   // 创建 JWT token 并返回给客户端
   const token = jwt.sign({ userId: user.id }, JWT_SECRET);
   res.json({ success: true, message: '登录成功', token });
+});
+
+// 发送邮箱验证码
+// 1. 保存验证码到数据库
+// 2. 发送验证码到用户邮箱
+router.post('/verification_code', async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({ success: false, message: 'no found email' });
+  }
+  const code = generateCode();
+  try {
+    // 先将验证码和邮箱保存到 verificationCode 表
+    await prisma.verificationCode.create({
+      data: {
+        code,
+        email,
+      },
+    });
+  } catch (e) {
+    return res.status(500).json({ success: false, message: '发送验证码失败!' });
+  }
+
+  try {
+    // 将验证码发送到邮箱
+    await sendVerificationEmail(email, code);
+  } catch (e) {
+    // 如果邮件服务发送失败，那么从表中把 email 删除
+    const existingEmail = await prisma.user.findFirst({
+      where: {
+        OR: [{ email }],
+      },
+      select: {
+        id: true,
+      },
+    });
+    if (existingEmail) {
+      await prisma.verificationCode.delete({
+        where: {
+          email,
+        },
+      });
+    }
+    return res.status(500).json({ success: false, message: '发送验证码失败!' });
+  }
+
+  res.json({ success: true, message: '发送验证码成功!' });
 });
 
 export default router;
