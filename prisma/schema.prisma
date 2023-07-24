@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 用户
+// 1 user -> n posts
+// 1 user -> n comments
+model User {
+  id        Int      @id @default(autoincrement())
+  ip        String
+  username  String   @unique
+  nickname  String?
+  password  String
+  email     String   @unique
+  avatar    String?
+  createdAt DateTime @default(now()) @map("created_at")
+  Post      Post[]
+
+  @@map("users")
+}
+
+// Post
+// 1 post -> n comments
+// 1 post -> n categories
+// 1 post -> n tags
+model Post {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now()) @map("created_at")
+  title      String
+  content    String
+  likesCount Int      @default(0) @map("likes_count")
+  viewsCount Int      @default(0) @map("views_count")
+  // 建立表关联，fileds 表示当前模型中的数据，reference 表示 关联模型 User 中的数据
+  // 在查询动作中，通过 includes 关联查询可以查到对应 user 的数据
+  // 在数据库中，author 并不会作为字段出现在 Post 表，只有 authorId 存在
+  author     User     @relation(fields: [authorId], references: [id])
+  authorId   Int      @map("author_id")
+
+  @@map("posts")
+}

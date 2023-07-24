@@ -28,6 +28,7 @@
     "url": "https://github.com/Knight174/my-express-kit.git"
   },
   "dependencies": {
+    "@prisma/client": "^5.0.0",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "express": "^4.17.3",
@@ -42,6 +43,7 @@
     "@types/multer": "^1.4.7",
     "@types/node": "^20.4.4",
     "concurrently": "^8.2.0",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "prisma": "^5.0.0"
   }
 }
