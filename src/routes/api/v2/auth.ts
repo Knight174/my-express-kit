@@ -54,7 +54,43 @@ router.post('/register', async (req, res) => {
 
   // 创建 JWT token 并返回给客户端
   const token = jwt.sign({ userId: newUser.id }, JWT_SECRET);
-  res.json({ success: true, message: 'success', token });
+  res.json({ success: true, message: '注册成功', token });
+});
+
+// 登录
+router.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({
+      success: false,
+      message: 'username or password is error',
+    });
+  }
+
+  // 查找用户
+  const user = await prisma.user.findUnique({
+    where: { username },
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      password: true,
+    },
+  });
+  if (!user) {
+    return res.status(400).json({ message: 'Invalid username or password' });
+  }
+
+  // 比较密码
+  const passwordMatch = await PasswordUtil.compare(password, user.password);
+  if (!passwordMatch) {
+    return res.status(400).json({ message: 'Invalid username or password' });
+  }
+
+  // 创建 JWT token 并返回给客户端
+  const token = jwt.sign({ userId: user.id }, JWT_SECRET);
+  res.json({ success: true, message: '登录成功', token });
 });
 
 export default router;
