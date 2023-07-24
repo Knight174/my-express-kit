@@ -79,13 +79,17 @@ router.post('/login', async (req, res) => {
     },
   });
   if (!user) {
-    return res.status(400).json({ message: 'Invalid username or password' });
+    return res
+      .status(400)
+      .json({ success: false, message: 'Invalid username or password' });
   }
 
   // 比较密码
   const passwordMatch = await PasswordUtil.compare(password, user.password);
   if (!passwordMatch) {
-    return res.status(400).json({ message: 'Invalid username or password' });
+    return res
+      .status(400)
+      .json({ success: false, message: 'Invalid username or password' });
   }
 
   // 创建 JWT token 并返回给客户端
