@@ -1,7 +1,7 @@
 import Router from 'express';
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
 import prisma from '../../../db/prisma';
+import { PasswordUtil } from '../../../utils/password-util';
 import { JWT_SECRET } from '../../../jwt/constant';
 
 const router = Router();
@@ -36,7 +36,7 @@ router.post('/register', async (req, res) => {
   }
 
   // 创建新用户
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await PasswordUtil.hash(password, 10);
   const newUser = await prisma.user.create({
     data: {
       username,
