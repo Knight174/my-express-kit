@@ -1,8 +1,8 @@
 import Router from 'express';
 import jwt from 'jsonwebtoken';
-import prisma from '../../../db/prisma';
+import prisma from '../../../config/prisma';
 import { PasswordUtil } from '../../../utils/password-util';
-import { JWT_SECRET } from '../../../jwt/constant';
+import { JWT_SECRET } from '../../../config/jwt';
 import sendVerificationEmail from '../../../utils/send_email-util';
 import generateCode from '../../../utils/verification_code-util';
 

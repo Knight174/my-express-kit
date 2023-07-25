@@ -1,5 +1,5 @@
 import { expressjwt as jwt } from 'express-jwt';
-import { JWT_SECRET } from '../jwt/constant';
+import { JWT_SECRET } from '../config/jwt';
 
 export default jwt({
   secret: JWT_SECRET,
