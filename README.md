@@ -11,7 +11,7 @@ The kit can remind me how to create an express application.
 
 ## roadmap
 
-- [ ] register (email)
+- [x] register (email)
 - [x] login
 - [x] file upload (single file)
 - [x] file upload (base64)
