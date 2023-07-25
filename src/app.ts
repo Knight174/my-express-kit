@@ -15,6 +15,7 @@ import workflowsRouter from './routes/api/v1/workflows';
 import uploadRouter from './routes/api/v1/upload';
 
 import authRouter from './routes/api/v2/auth';
+import postRouter from './routes/api/v2/post';
 
 // 创建主应用实例
 const app: Application = express();
@@ -46,7 +47,8 @@ app.use('/api/v1/upload', uploadRouter);
 app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/workflows', workflowsRouter);
 
-app.use('/api/v2/auth', authRouter);
+app.use('/api/v2', authRouter);
+app.use('/api/v2', postRouter);
 
 const server = app.listen(3000, () => {
   const address = server.address();

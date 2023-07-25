@@ -90,3 +90,5 @@ router.get('/posts', async (req, res) => {
   });
   sendSuccessResponse(res, '获取成功', draftPosts);
 });
+
+export default router;
