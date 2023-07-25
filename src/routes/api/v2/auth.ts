@@ -140,47 +140,61 @@ router.post('/login', async (req, res) => {
 // 发送邮箱验证码
 // 1. 保存验证码到数据库
 // 2. 发送验证码到用户邮箱
+// 发送邮箱验证码
 router.post('/verification_code', async (req, res) => {
   const { email } = req.body;
+
   if (!email) {
-    return res.status(400).json({ success: false, message: 'no found email' });
+    return sendErrorResponse(res, 400, 'invalid email');
   }
+
+  // 检查邮箱是否已存在于用户表中
+  const existingUser = await prisma.user.findFirst({
+    where: { email },
+    select: { id: true },
+  });
+
+  if (existingUser) {
+    return sendErrorResponse(res, 400, 'Email already exists');
+  }
+
   const code = generateVerificationCode(); // 生成验证码
+
   try {
-    // 先将验证码和邮箱保存到 verificationCode 表
+    // 将验证码保存到 verificationCode 表
     await prisma.verificationCode.create({
       data: {
         code,
         email,
       },
     });
-  } catch (e) {
-    return sendErrorResponse(res, 500, 'Internal Server Error');
-  }
 
+    // 发送验证码到用户邮箱
+    await sendVerificationCodeEmail(email, code);
+
+    sendSuccessResponse(res, '发送验证码成功');
+  } catch (error) {
+    // 发送失败，从表中删除验证码
+    await prisma.verificationCode.delete({
+      where: { email },
+    });
+
+    return sendErrorResponse(
+      res,
+      500,
+      'Failed to send verification code email'
+    );
+  }
+});
+
+const sendVerificationCodeEmail = async (email: string, code: string) => {
   try {
     // 将验证码发送到邮箱
     await sendVerificationEmail(email, code);
-  } catch (e) {
-    // 如果邮件服务发送失败，那么从表中把 email 删除
-    const existingEmail = await prisma.user.findFirst({
-      where: {
-        OR: [{ email }],
-      },
-      select: {
-        id: true,
-      },
-    });
-    if (existingEmail) {
-      await prisma.verificationCode.delete({
-        where: {
-          email,
-        },
-      });
-    }
-    return sendErrorResponse(res, 500, 'Internal Server Error');
+  } catch (error) {
+    // 发送失败，抛出错误
+    throw new Error('Failed to send verification code email.');
   }
-  sendSuccessResponse(res, '发送验证码成功');
-});
+};
 
 export default router;
