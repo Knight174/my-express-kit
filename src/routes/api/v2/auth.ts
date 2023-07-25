@@ -10,7 +10,6 @@ import {
   sendErrorResponse,
   handlePrismaError,
 } from '../../../utils/response-util';
-import { Response } from 'express-serve-static-core';
 
 const router = Router();
 
@@ -104,41 +103,38 @@ router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    return res.status(400).json({
-      success: false,
-      message: 'username or password is error',
+    return sendErrorResponse(res, 400, 'no username or password');
+  }
+
+  try {
+    // 查找用户
+    const user = await prisma.user.findUnique({
+      where: { username },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        password: true,
+      },
     });
-  }
+    if (!user) {
+      return sendErrorResponse(res, 400, 'Invalid username or password');
+    }
 
-  // 查找用户
-  const user = await prisma.user.findUnique({
-    where: { username },
-    select: {
-      id: true,
-      username: true,
-      email: true,
-      password: true,
-    },
-  });
-  if (!user) {
-    return res
-      .status(400)
-      .json({ success: false, message: 'Invalid username or password' });
-  }
+    // 比较密码
+    const passwordMatch = await PasswordUtil.compare(password, user.password);
+    if (!passwordMatch) {
+      return sendErrorResponse(res, 400, 'Invalid username or password');
+    }
 
-  // 比较密码
-  const passwordMatch = await PasswordUtil.compare(password, user.password);
-  if (!passwordMatch) {
-    return res
-      .status(400)
-      .json({ success: false, message: 'Invalid username or password' });
+    // 创建 JWT token 并返回给客户端
+    const token = jwt.sign({ userId: user.id }, JWT_SECRET);
+    sendSuccessResponse(res, '登录成功', {
+      token,
+    });
+  } catch (err) {
+    return handlePrismaError(res, err);
   }
-
-  // 创建 JWT token 并返回给客户端
-  const token = jwt.sign({ userId: user.id }, JWT_SECRET);
-  sendSuccessResponse(res, '登录成功', {
-    token,
-  });
 });
 
 // 发送邮箱验证码
