@@ -7,7 +7,8 @@
     "start": "node app.js",
     "dev:start": "nodemon ./dist/app.js",
     "dev:bundle": "tsc -w",
-    "dev": "tsc && concurrently npm:dev:*"
+    "dev": "tsc && concurrently npm:dev:*",
+    "db:seed": "node ./dist/prisma/seed.js"
   },
   "keywords": [
     "express.js",

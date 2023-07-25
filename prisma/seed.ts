@@ -1,4 +1,4 @@
-import prisma from './prisma';
+import prisma from '../src/config/prisma';
 
 async function seed() {
   try {
