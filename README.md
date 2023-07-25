@@ -39,12 +39,52 @@ The kit can remind me how to create an express application.
 
 ## install
 
-```
+```bash
 $ npm i
 ```
 
 ## start
 
-```
+```bash
 $ npm run dev
+```
+
+## init db server in docker
+
+> If you have created the database server, skip it.
+
+```bash
+touch sketch-data # used to persistently store pg data
+chmod +x ./bin/create_databases.sh
+bin/create_databases.sh
+```
+
+## create databses
+
+> If you alse have created these databases, skip it.
+
+```bash
+# enter your psql container
+docker exec -it <container_name_or_id> bash
+
+# login psql
+# psql -U <username> -d <database_name>
+psql -U sketch
+
+# CREATE DATABASE <database_name>;
+CREATE DATABASE sketch_dev; # for dev
+CREATE DATABASE sketch_test; # for test
+CREATE DATABASE sketch_prod; # for production
+
+# connect to db sketch_dev
+\c sketch_dev;
+```
+
+## connect to db for dev
+
+```bash
+# enter your psql container
+docker exec -it <container_id psql> bash
+# and then execute the below command in the docker container
+psql -U sketch -d sketch_dev
 ```
