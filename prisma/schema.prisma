@@ -32,12 +32,13 @@ model User {
 // 1 post -> n categories
 // 1 post -> n tags
 model Post {
-  id         Int      @id @default(autoincrement())
+  id         String   @id @default(uuid())
   createdAt  DateTime @default(now()) @map("created_at")
   title      String
   content    String
   likesCount Int      @default(0) @map("likes_count")
   viewsCount Int      @default(0) @map("views_count")
+  published  Boolean  @default(false)
   // 建立表关联，fileds 表示当前模型中的数据，reference 表示 关联模型 User 中的数据
   // 在查询动作中，通过 includes 关联查询可以查到对应 user 的数据
   // 在数据库中，author 并不会作为字段出现在 Post 表，只有 authorId 存在
