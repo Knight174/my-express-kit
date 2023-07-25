@@ -1,14 +1,16 @@
 import Router from 'express';
 import jwt from 'jsonwebtoken';
 import prisma from '../../../config/prisma';
-import { JWT_SECRET } from '../../../config/jwt';
+import { JWT_SECRET } from '../../../config/constant';
 import { PasswordUtil } from '../../../utils/password-util';
 import sendVerificationEmail from '../../../utils/send_email-util';
 import generateVerificationCode from '../../../utils/verification_code-util';
 import {
   sendSuccessResponse,
   sendErrorResponse,
+  handlePrismaError,
 } from '../../../utils/response-util';
+import { Response } from 'express-serve-static-core';
 
 const router = Router();
 
@@ -25,8 +27,8 @@ router.post('/register', async (req, res) => {
     return sendErrorResponse(res, 400, 'no verification code');
   }
 
-  // 检查用户发送的 code 和数据库中 email 对应的 code 是否一致
   try {
+    // 检查用户发送的 code 和数据库中 email 对应的 code 是否一致
     const codeInDB = await prisma.verificationCode.findUnique({
       where: {
         email,
@@ -45,12 +47,8 @@ router.post('/register', async (req, res) => {
       // 验证码已过期
       return sendErrorResponse(res, 400, '请重新发送验证码');
     }
-  } catch (e) {
-    return sendErrorResponse(res, 500, 'Internal Server Error');
-  }
 
-  // 检查用户名和邮箱是否已存在
-  try {
+    // 检查用户名和邮箱是否已存在
     const existingUser = await prisma.user.findFirst({
       where: {
         OR: [{ username }, { email }],
@@ -63,12 +61,7 @@ router.post('/register', async (req, res) => {
     if (existingUser) {
       return sendErrorResponse(res, 400, 'Username or email already exists');
     }
-  } catch (e) {
-    return sendErrorResponse(res, 500, 'Internal Server Error');
-  }
 
-  // 创建新用户
-  try {
     // 生成 hash 密码
     const hashedPassword = await PasswordUtil.hash(password, 10);
     // 创建新用户
@@ -88,16 +81,12 @@ router.post('/register', async (req, res) => {
     });
 
     if (newUser) {
-      try {
-        // 如果注册成功，删除验证码数据库中的对应字段
-        await prisma.verificationCode.delete({
-          where: {
-            email,
-          },
-        });
-      } catch (e) {
-        return sendErrorResponse(res, 500, 'Internal Server Error');
-      }
+      // 如果注册成功，删除验证码数据库中的对应字段
+      await prisma.verificationCode.delete({
+        where: {
+          email,
+        },
+      });
 
       // 创建 JWT token 并返回给客户端
       const token = jwt.sign({ userId: newUser.id }, JWT_SECRET);
@@ -105,8 +94,8 @@ router.post('/register', async (req, res) => {
         token,
       });
     }
-  } catch (e) {
-    return sendErrorResponse(res, 500, 'Internal Server Error');
+  } catch (err) {
+    return handlePrismaError(res, err);
   }
 });
 
