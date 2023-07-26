@@ -1,4 +1,5 @@
 import { ErrorRequestHandler, Request, Response, NextFunction } from 'express';
+import logger from './other-logger';
 
 interface Error {
   statusCode: number;
@@ -11,6 +12,8 @@ const errorHandler: ErrorRequestHandler = (
   res: Response,
   next: NextFunction
 ) => {
+  logger.error(err); // 日志记录
+
   const statusCode = err.statusCode || 500;
   const message = err.message || 'Internal Server Error';
 
