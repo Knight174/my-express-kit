@@ -1,7 +1,7 @@
 import { ErrorRequestHandler, Request, Response, NextFunction } from 'express';
 
 interface Error {
-  status: number;
+  statusCode: number;
   message: string;
 }
 
@@ -11,17 +11,15 @@ const errorHandler: ErrorRequestHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  console.error('Error:', err);
-
-  const status = err.status || 500;
+  const statusCode = err.statusCode || 500;
   const message = err.message || 'Internal Server Error';
 
   const errorResponse: Error = {
     message,
-    status,
+    statusCode,
   };
 
-  res.status(status).json({ error: errorResponse });
+  res.status(statusCode).json({ error: errorResponse });
 };
 
 export default errorHandler;

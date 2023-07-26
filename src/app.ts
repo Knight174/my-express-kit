@@ -3,13 +3,12 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import consoleLogger from 'morgan';
 import requestLogger from './middleware/request-logger';
-// import errorLogger from './middleware/other-logger';
-// errorLogger.error('abcdefg'); // 触发一个错误日志记录
 import logLocals from './middleware/log-locals';
-import jwt from './middleware/jwt-auth';
+// import jwt from './middleware/jwt-auth';
 import errorHandler from './middleware/error-handler';
 
 import indexRouter from './routes/index';
+import errorsRouter from './routes/errors';
 import testRouter from './routes/api/v1/test';
 import usersRouter from './routes/api/v1/users';
 import workflowsRouter from './routes/api/v1/workflows';
@@ -31,11 +30,12 @@ app.use(express.static('./public')); // 指定静态目录，先去这里找，�
 app.use(cors()); // 处理 cors 跨域
 app.use(consoleLogger('dev')); // 控制台中打印请求日志
 app.use(requestLogger); // 请求日志记录到日志文件
-app.use(jwt);
+// app.use(jwt);
 
 // 本地中间件：任意请求，打印 request 请求体数据
 app.use((req, res, next) => {
-  console.log('req', req.body);
+  console.log('req.protocol', req.protocol);
+  console.log('req.method => ', req.method);
   next();
 });
 // 外部中间件
@@ -43,6 +43,7 @@ app.use(logLocals);
 
 // 路由中间件
 app.use('/', indexRouter);
+app.use('/', errorsRouter);
 app.use('/api/v1', testRouter);
 app.use('/api/v1', uploadRouter);
 app.use('/api/v1', usersRouter);

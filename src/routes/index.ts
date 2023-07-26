@@ -2,12 +2,6 @@ import Router from 'express';
 import path from 'path';
 const router = Router();
 
-// router.get('/error_handler', (request, response) => {
-//   throw new Error('This is an error');
-
-//   res.json({ status: 'ok' });
-// });
-
 router.get('/', (request, response) => {
   response.send('hello world');
 });
