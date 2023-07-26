@@ -43,10 +43,10 @@ app.use(logLocals);
 
 // 路由中间件
 app.use('/', indexRouter);
-app.use('/api/v1/test', testRouter);
-app.use('/api/v1/upload', uploadRouter);
-app.use('/api/v1/users', usersRouter);
-app.use('/api/v1/workflows', workflowsRouter);
+app.use('/api/v1', testRouter);
+app.use('/api/v1', uploadRouter);
+app.use('/api/v1', usersRouter);
+app.use('/api/v1', workflowsRouter);
 
 app.use('/api/v2', authRouter);
 app.use('/api/v2', postRouter);

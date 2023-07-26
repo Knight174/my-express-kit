@@ -12,7 +12,7 @@ const router = Router();
  *                             => params: {id: 1, action: 'edit'}
  *                             => query: {key1: 'value1', key2: 'value2'}
  */
-router.get('/:id/:action', (request, response) => {
+router.get('/users/:id/:action', (request, response) => {
   // 只包含 :id, :action
   console.log('request.params => ', request.params);
   console.log('request.query => ', request.query);
@@ -27,7 +27,7 @@ router.get('/:id/:action', (request, response) => {
  * /api/v1/users/search?name=xxx => {name: 'xxx'}
  * /api/v1/users/search?name=xxx&age=18 => {name: 'xxx', age: 18}
  */
-router.get('/search', (request, response) => {
+router.get('/users/search', (request, response) => {
   console.log('request.query => ', request.query);
   response.json({
     data: request.query,

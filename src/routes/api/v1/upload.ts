@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // 普通文件上传
-router.post('/', upload.single('file'), (request, response) => {
+router.post('/upload', upload.single('file'), (request, response) => {
   if (!request.file) {
     return response.status(400).json({ message: 'No file uploaded' });
   }
@@ -36,7 +36,7 @@ router.post('/', upload.single('file'), (request, response) => {
 });
 
 // base64 文件上传
-router.post('/base64', (req, res) => {
+router.post('/upload/base64', (req, res) => {
   const { filename, data } = req.body;
 
   // 将 base64 字符串解码为二进制数据
