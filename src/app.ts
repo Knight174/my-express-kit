@@ -1,12 +1,12 @@
 import express, { Application } from 'express';
-import './src/process';
+import './utils/process';
 
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import consoleLogger from 'morgan';
 import requestLogger from './middleware/request-logger';
 import logLocals from './middleware/log-locals';
-// import jwt from './middleware/jwt-auth';
+import jwt from './middleware/jwt-auth';
 import notFound from './middleware/not-found';
 import errorHandler from './middleware/error-handler';
 
@@ -33,7 +33,7 @@ app.use(express.static('./public')); // 指定静态目录，先去这里找，�
 app.use(cors()); // 处理 cors 跨域
 app.use(consoleLogger('dev')); // 控制台中打印请求日志
 app.use(requestLogger); // 请求日志记录到日志文件
-// app.use(jwt);
+app.use(jwt); // 使用 jwt 进行用户权限认证
 
 // 本地中间件：任意请求，打印 request 请求体数据
 app.use((req, res, next) => {
