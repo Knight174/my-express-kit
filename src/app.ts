@@ -5,6 +5,7 @@ import consoleLogger from 'morgan';
 import requestLogger from './middleware/request-logger';
 import logLocals from './middleware/log-locals';
 // import jwt from './middleware/jwt-auth';
+import notFound from './middleware/not-found';
 import errorHandler from './middleware/error-handler';
 
 import indexRouter from './routes/index';
@@ -51,6 +52,9 @@ app.use('/api/v1', workflowsRouter);
 
 app.use('/api/v2', authRouter);
 app.use('/api/v2', postRouter);
+
+// 404
+app.use(notFound);
 
 // 异常处理中间件
 app.use(errorHandler);
