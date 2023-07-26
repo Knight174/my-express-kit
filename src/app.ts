@@ -1,4 +1,6 @@
 import express, { Application } from 'express';
+import './src/process';
+
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import consoleLogger from 'morgan';
