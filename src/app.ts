@@ -7,6 +7,7 @@ import requestLogger from './middleware/request-logger';
 // errorLogger.error('abcdefg'); // 触发一个错误日志记录
 import logLocals from './middleware/log-locals';
 import jwt from './middleware/jwt-auth';
+import errorHandler from './middleware/error-handler';
 
 import indexRouter from './routes/index';
 import testRouter from './routes/api/v1/test';
@@ -49,6 +50,9 @@ app.use('/api/v1/workflows', workflowsRouter);
 
 app.use('/api/v2', authRouter);
 app.use('/api/v2', postRouter);
+
+// 异常处理中间件
+app.use(errorHandler);
 
 const server = app.listen(3000, () => {
   const address = server.address();
