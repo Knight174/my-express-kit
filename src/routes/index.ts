@@ -14,15 +14,15 @@ router.get('/', (request, response) => {
 router.get('/yo', (request, response) => {
   response.send('YO!');
 });
-router.get('/blog', (request, response) => {
-  response.send('hello, blog');
+router.get('/about', (request, response) => {
+  response.send('hello, about');
 });
 
 // 设置重定向：重定向到 /blog
-router.get('/posts', (request, response) => {
+router.get('/about_me', (request, response) => {
   // response.status(301).location("/blog").end();
   // 等价于：
-  response.redirect('/blog');
+  response.redirect('/about');
   response.end();
 });
 
