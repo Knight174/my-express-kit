@@ -63,4 +63,22 @@ router.post('/upload/base64', (req, res) => {
   });
 });
 
+// 多文件上传（限制 10 个文件
+router.post('/upload/files', upload.array('files', 10), (req, res) => {
+  // const { files } = req;
+  const files: Express.Multer.File[] = req.files as Express.Multer.File[];
+  if (!files.length) {
+    return res.status(400).json({
+      message: 'No file uploaded',
+    });
+  }
+  const fileUrls = files.map((file) => './public/data/' + file.filename);
+
+  res.json({
+    code: 200,
+    data: fileUrls || [],
+    message: 'Multiple files uploaded successfully.',
+  });
+});
+
 export default router;
